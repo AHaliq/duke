@@ -66,6 +66,7 @@ public enum Response {
     }),
     TODO("(?i)^todo .+", (i, s) -> {
         addTask(new Todo(i.split("todo ", 2)[1]), s);
+        assert s.list.size() >= 1 : "expecting non empty list";
         return true;
     }),
     EVENT_NO_NAME("(?i)^event\\s*", (i, s) -> {
@@ -82,6 +83,7 @@ public enum Response {
         String[] dates = parts[1].split(" to ", 2);
         addTask(new Event(parts[0], DateTime.parseString(dates[0]),
                 DateTime.parseString(dates[1])), s);
+        assert s.list.size() >= 1 : "expecting non empty list";
         return true;
     }),
     EVENT_WRONG_TIME("(?i)^event .+ /at .+", (i, s) -> {
@@ -100,6 +102,7 @@ public enum Response {
     DEADLINE("(?i)^deadline .+ /by .+", (i, s) -> {
         String[] parts = splitTwoDelimiters(i, "(?i)^deadline ", "(?i)/by ");
         addTask(new Deadline(parts[0], DateTime.parseString(parts[1])), s);
+        assert s.list.size() >= 1 : "expecting non empty list";
         return true;
     }),
     DEADLINE_WRONG_TIME("(?i)^deadline .+ /by .+", (i, s) -> {
