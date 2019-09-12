@@ -2,6 +2,7 @@ package com.core;
 
 import com.core.savedata.SaveFile;
 import com.util.Printer;
+import java.util.Arrays;
 
 public class DukeResponder {
     private State state;
@@ -9,12 +10,9 @@ public class DukeResponder {
     public DukeResponder() {
         state = new State(SaveFile.loadTasks());
     }
+
     public String getResponse(String input) {
-        for (Response r : Response.values()) {
-            if (r.call(input, state)) {
-                break;
-            }
-        }
+        Arrays.stream(Response.values()).reduce(false, (acc, val) -> acc || val.call(input, state), Boolean::logicalAnd);
         return Printer.flush();
     }
 }
